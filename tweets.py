@@ -11,9 +11,9 @@ ACCESS_KEY = os.getenv("Access_Key")
 ACCESS_KEY_SECRET = os.getenv("Access_Key_Secret")
 
 
-def get_tweets(token=None):
+def get_tweets(token=None, keyword="Joe Biden"):
     client = tweepy.Client(Bearer_Token, API_Key, API_Key_Secret, ACCESS_KEY, ACCESS_KEY_SECRET)
-    query = '"Joe Biden" lang:en'
+    query = '"{}" lang:en'.format(keyword)
     tweets = client.search_recent_tweets(query=query, max_results=100, next_token=token)
     return tweets
 
@@ -48,8 +48,8 @@ def get_sentiments(polarity):
         return 'Negative'
 
 
-def sentiment_dataframe(next_token=None):
-    response = get_tweets(next_token)
+def sentiment_dataframe(next_token=None, keyword="Joe Biden"):
+    response = get_tweets(next_token, keyword)
     next_token = response.meta['next_token']
     df = pd.DataFrame([tweet.text for tweet in response.data], columns=['tweets'])
     df['tweets'] = df['tweets'].apply(clean_tweet)
