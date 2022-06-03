@@ -17,10 +17,3 @@ def get_tweets():
     n_tweets = negative_tweets(df)
     nu_tweets = neutral_tweets(df)
     return render_template('index.html', tweets=[p_tweets['tweets'], n_tweets['tweets'], nu_tweets['tweets']])
-
-
-# main driver function
-if __name__ == '__main__':
-    # run() method of Flask class runs the application
-    # on the local development server.
-    app.run()
