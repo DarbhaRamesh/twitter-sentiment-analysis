@@ -11,10 +11,10 @@ ACCESS_KEY = os.getenv("Access_Key")
 ACCESS_KEY_SECRET = os.getenv("Access_Key_Secret")
 
 
-def get_tweets(token=None, keyword="Joe Biden"):
+def get_tweets(keyword='Joe Biden'):
     client = tweepy.Client(Bearer_Token, API_Key, API_Key_Secret, ACCESS_KEY, ACCESS_KEY_SECRET)
     query = '"{}" lang:en'.format(keyword)
-    tweets = client.search_recent_tweets(query=query, max_results=100, next_token=token)
+    tweets = client.search_recent_tweets(query=query, max_results=100)
     return tweets
 
 
@@ -48,27 +48,12 @@ def get_sentiments(polarity):
         return 'Negative'
 
 
-def sentiment_dataframe(next_token=None, keyword="Joe Biden"):
-    response = get_tweets(next_token, keyword)
-    next_token = response.meta['next_token']
+def sentiment_dataframe(keyword='Joe Biden'):
+    response = get_tweets(keyword)
     df = pd.DataFrame([tweet.text for tweet in response.data], columns=['tweets'])
     df['tweets'] = df['tweets'].apply(clean_tweet)
     df.drop_duplicates(subset="tweets", keep=False, inplace=True)
     df['polarity'] = df['tweets'].apply(get_polaity)
     df['sentiment'] = df['polarity'].apply(get_sentiments)
-    return df, next_token
-
-
-def positive_tweets(df):
-    p_df = df[df['sentiment'] == 'Positive'][['tweets']].copy()
-    return p_df.to_dict('dict')
-
-
-def negative_tweets(df):
-    n_df = df[df['sentiment'] == 'Negative'][['tweets']].copy()
-    return n_df.to_dict('dict')
-
-
-def neutral_tweets(df):
-    nu_df = df[df['sentiment'] == 'Neutral'][['tweets']].copy()
-    return nu_df.to_dict('dict')
+    display_df = df[['tweets', 'sentiment']]
+    return display_df.values.tolist()

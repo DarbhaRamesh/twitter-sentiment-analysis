@@ -1,59 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+{% extends 'base.html' %}
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#tweets-table').DataTable();
+        } );
+    </script>
 </head>
-<body>
- <form action="/">
-     <button type="submit" class="btn btn-outline-dark">Back</button>
- </form>
-<h1>Twitter Sentiment analysis</h1>
-<table  class="table table-striped table-bordered">
-    <thead>
-    <tr>
-      <th scope="col">positive tweets</th>
-    </tr>
-  </thead>
-     <tbody>
-    {% for id,tweet in tweets[0].items() %}
-    <tr>
-      <td>{{ tweet|safe }}</td>
-    </tr>
-    {% endfor %}
-     </tbody>
-</table>
-<table  class="table table-striped table-bordered">
-    <thead>
-    <tr>
-      <th scope="col">negative tweets</th>
-    </tr>
-  </thead>
-     <tbody>
-    {% for id,tweet in tweets[1].items() %}
-    <tr>
-      <td>{{ tweet|safe }}</td>
-    </tr>
-    {% endfor %}
-     </tbody>
-</table>
-<table  class="table table-striped table-bordered">
-    <thead>
-    <tr>
-      <th scope="col">neutral tweets</th>
-    </tr>
-  </thead>
-     <tbody>
-    {% for id,tweet in tweets[2].items() %}
-    <tr>
-      <td>{{ tweet|safe }}</td>
-    </tr>
-    {% endfor %}
-     </tbody>
-</table>
+{% endblock %}
+{% block main %}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-  </body>
-</body>
-</html>
+    <nav class="navbar navbar-dark bg-dark sticky-top">
+      <a class="navbar-brand" style="padding:0 3%" href="/">
+        Twitter Sentiment analysis
+      </a>
+    </nav>
+
+     <div style="width:80%; margin:3% auto; background-color:#F9F9F9; padding:2%">
+        <table id="tweets-table" class="cell-border display">
+            <thead>
+            <tr>
+                <th scope="col">Tweet</th>
+                <th scope="col">Sentiment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tweets in tweets_sentiments %}
+            <tr>
+                <td>{{ tweets[0]|safe }}</td>
+                <td>{{ tweets[1]|safe }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+     </div>
+{% endblock %}
